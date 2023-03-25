@@ -12,7 +12,7 @@ export function uploadPic (file, type = 'other') {
     const data = new FormData();
     data.append('file', file);
     return request({
-        url: `/utility/file/uploadFile?type=${type}`,
+        url: `/him-utility/file/uploadFile?type=${type}`,
         method: 'post',
         data,
         headers: {
@@ -24,7 +24,7 @@ export function uploadPic (file, type = 'other') {
 
 export function uploadBase64Pic (data, type = 'other') {
     return request({
-        url: '/utility/file/uploadBase64Image',
+        url: '/him-utility/file/uploadBase64Image',
         method: 'post',
         data: {
             ...data,

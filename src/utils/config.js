@@ -6,4 +6,5 @@
  * @FilePath: /iot-mp-web/src/utils/config.js
  * @Description: 配置文件
  */
-export const API_PREFIX_SYSTEM = '/him/him-system';
+export const API_PREFIX_SYSTEM = '/him-system';
+export const API_PREFIX_BUSSINESS= '/him-business';

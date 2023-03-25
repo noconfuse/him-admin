@@ -170,6 +170,7 @@ export default {
                     url: res.data,
                     uid: file.uid
                 });
+                this.$emit('update:fileList', this.fileList)
                 loading.close();
             }).catch((e) => {
                 loading.close();

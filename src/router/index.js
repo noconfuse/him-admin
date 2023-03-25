@@ -31,15 +31,56 @@ export const constantRoutes = [
         hidden: true
     },
     {
-        path: '/dashboard',
+        path: '/home',
         component: map.get('Layout'),
-        redirect: '/dashboard/index',
+        redirect: '/home/menu',
+        children: [
+            {
+                path: 'menu',
+                name: 'menu',
+                component: () => import('@/views/menu/index')
+            },
+            {
+                path: 'pic',
+                name: 'pic',
+                component: () => import('@/views/pic/index')
+            },
+        ],
+        hidden: true
+    },
+    {
+        path: '/subPage',
+        component: map.get('Layout'),
+        redirect: '/subPage/number',
+        children: [
+            {
+                path: 'number',
+                name: 'number',
+                component: () => import('@/views/number/index')
+            },
+            {
+                path: 'search',
+                name: 'search',
+                component: () => import('@/views/search/index')
+            },
+            {
+                path: 'about',
+                name: 'about',
+                component: () => import('@/views/about/index')
+            },
+        ],
+        hidden: true
+    },
+    {
+        path: '/citys',
+        component: map.get('Layout'),
+        redirect: '/citys/index',
         children: [
             {
                 path: 'index',
-                name: 'Dashboard',
-                component: () => import('@/views/dashboard/index')
-            }
+                name: 'index',
+                component: () => import('@/views/citys/index')
+            },
         ],
         hidden: true
     },
