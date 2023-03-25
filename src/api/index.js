@@ -157,5 +157,13 @@ export default {
             method: 'delete',
         });
     },
+    // 随机生成账号
+    addExhibitHallCityUser: (data = {}) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/exhibition/hall/city/addExhibitHallCityUser`,
+            method: 'post',
+            data
+        });
+    },
 }
 

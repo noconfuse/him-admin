@@ -26,13 +26,13 @@
         <Dialog :dialog="dialog" @confirm="handleConfirm">
             <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="120px">
                 <el-form-item label="展馆名称" prop="exhibitionHallName">
-                    <el-input v-model="dialog.form.exhibitionHallName" placeholder="请输入展馆名称" maxlength="100" />
+                    <el-input v-model="dialog.form.exhibitionHallName" placeholder="请输入展馆名称"  />
                 </el-form-item>
                 <el-form-item label="展馆名称英文" prop="exhibitionHallNameEn">
-                    <el-input v-model="dialog.form.exhibitionHallNameEn" placeholder="请输入展馆名称英文" maxlength="100" />
+                    <el-input v-model="dialog.form.exhibitionHallNameEn" placeholder="请输入展馆名称英文"  />
                 </el-form-item>
                 <el-form-item label="展馆code" prop="exhibitionHallCode">
-                    <el-input v-model="dialog.form.exhibitionHallCode" placeholder="请输入展馆code" maxlength="100" />
+                    <el-input v-model="dialog.form.exhibitionHallCode" placeholder="请输入展馆code"  />
                 </el-form-item>
                 <el-form-item label="背景音乐" prop="linkUrl">
                     <UploadFile ref="exhibitionBgsoundUrl" :multiple="false" :limit="1" :file-list.sync="dialog.form.exhibitionBgsoundUrl" accept=".mp3">

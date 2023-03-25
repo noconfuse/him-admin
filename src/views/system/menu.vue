@@ -136,7 +136,7 @@
                         <el-table :data="dialog.form.apiUrls" border style="width: 100%">
                             <el-table-column label="接口地址">
                                 <template slot-scope="scope">
-                                    <el-input v-model="scope.row.url" placeholder="请输入接口地址" maxlength="100" />
+                                    <el-input v-model="scope.row.url" placeholder="请输入接口地址"  />
                                 </template>
                             </el-table-column>
                             <el-table-column label="操作" align="center" width="100">

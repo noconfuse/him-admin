@@ -85,6 +85,13 @@ export const constantRoutes = [
         hidden: true
     },
     {
+        path: '/citysEdit',
+        name: 'citysEdit',
+        component: map.get('Layout'),
+        component: () => import('@/views/citys/edit'),
+        hidden: true
+    },
+    {
         path: '/',
         component: map.get('Layout'),
         redirect: () => {

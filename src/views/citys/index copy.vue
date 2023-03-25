@@ -5,13 +5,23 @@
             <div class="list-page-operation">
                 <div class="l" />
                 <div class="r">
-                    <el-button type="success" @click="handleAdd()">添加菜单</el-button>
+                    <el-button type="success" @click="handleAdd()">添加城市资源库</el-button>
                 </div>
             </div>
             <el-table ref="multipleTable" v-loading="loading" :data="tableData" border style="width: 100%" row-key="uuid" :default-expand-all="false">
-                <el-table-column prop="menuName" label="中文名称" align="left" min-width="200" />
-                <el-table-column prop="menuNameEn" label="英文名称" align="left" min-width="200" />
-                <el-table-column prop="linkUrl" label="跳转链接" align="left" min-width="200" />
+                <el-table-column prop="linkUrl" label="城市封面图" align="left" width="120">
+                    <template slot-scope="{row}">
+                        <el-image 
+                            style="width: 100px; height: 100px"
+                            :src="row.cityCoverImage" 
+                            :preview-src-list="[row.cityCoverImage]">
+                        </el-image>
+                    </template>
+                </el-table-column>
+                <el-table-column prop="cityName" label="城市名称" align="left" min-width="200" />
+                <el-table-column prop="cityNameEn" label="城市名称英文" align="left" min-width="200" />
+                <el-table-column prop="cityIntroduce" label="城市简介" align="left" min-width="200" />
+                <el-table-column prop="cityIntroduceEn" label="城市简介英文" align="left" min-width="200" />
                 <el-table-column label="操作" align="center" width="140" fixed="right">
                     <template slot-scope="{row,$index}">
                         <el-link type="primary" :underline="false" @click="handleEdit(row,$index)">
@@ -25,15 +35,28 @@
             </el-table>
         </div>
         <Dialog :dialog="dialog" @confirm="handleConfirm">
-            <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="100px">
-                <el-form-item label="中文名称" prop="menuName">
-                    <el-input v-model="dialog.form.menuName" placeholder="请输入中文名称"  />
+            <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="120px">
+                <el-form-item label="城市名称" prop="cityName">
+                    <el-input v-model="dialog.form.cityName" placeholder="请输入城市名称"  />
                 </el-form-item>
-                <el-form-item label="英文名称" prop="menuNameEn">
-                    <el-input v-model="dialog.form.menuNameEn" placeholder="请输入英文名称"  />
+                <el-form-item label="城市名称英文" prop="cityNameEn">
+                    <el-input v-model="dialog.form.cityNameEn" placeholder="请输入城市名称英文"  />
                 </el-form-item>
-                <el-form-item label="跳转地址" prop="linkUrl">
-                    <el-input v-model="dialog.form.linkUrl" placeholder="请输入跳转地址"  />
+                <el-form-item label="城市简介" prop="cityIntroduce">
+                    <el-input v-model="dialog.form.cityIntroduce" placeholder="请输入城市简介"  />
+                </el-form-item>
+                <el-form-item label="城市简介英文" prop="cityIntroduceEn">
+                    <el-input v-model="dialog.form.cityIntroduceEn" placeholder="请输入城市简介英文"  />
+                </el-form-item>
+                <el-form-item label="城市code" prop="cityCode">
+                    <el-input v-model="dialog.form.cityCode" placeholder="请输入城市code"  />
+                </el-form-item>
+                <el-form-item label="城市封面图" prop="cityCoverImage">
+                    <UploadFile ref="cityCoverImage" :multiple="false" :limit="1" :file-list.sync="dialog.form.cityCoverImage" accept=".mp3">
+                        <ul>
+                            <li>格式：mp3</li>
+                        </ul>
+                    </UploadFile>
                 </el-form-item>
             </el-form>
         </Dialog>
@@ -44,29 +67,33 @@
 import api from '@/api/index';
 import SearchCriteria from '@/components/SearchCriteria';
 import Dialog from '@/components/Dialog';
-const baseForm = {}
+import UploadFile from '@/components/UploadPic';
+
+const baseForm = {
+};
 export default {
     name: 'Menu',
     components: {
         SearchCriteria,
-        Dialog
+        Dialog,
+        UploadFile
     },
     data () {
         return {
             loading: true,
             filter: {
-                menuName: {
+                cityCode: {
                     type: 'input',
-                    label: '中文名称',
+                    label: '城市code',
                     value: '',
-                    placeholder: '请选择中文名称',
+                    placeholder: '请选择城市code',
                     filterable: true,
                 },
-                menuNameEn: {
+                cityName: {
                     type: 'input',
-                    label: '英文名称',
+                    label: '城市名称',
                     value: '',
-                    placeholder: '请选择英文名称',
+                    placeholder: '请选择城市名称',
                     filterable: true,
                 },
             },
@@ -80,128 +107,26 @@ export default {
                 form: {},
                 btnLoading: false,
                 rules: {
-                    menuName: [
+                    cityName: [
                         {
                             required: true,
-                            message: '请输入中文名称',
+                            message: '请输入城市名称',
                             trigger: 'blur'
                         }
                     ],
-                    menuNameEn: [
+                    cityNameEn: [
                         {
                             required: true,
-                            message: '请输入英文名称',
+                            message: '请输入城市名称英文',
                             trigger: 'blur'
                         }
                     ],
                 }
             },
-            isLink: [
-                {
-                    lableDesc: '否',
-                    uuid: 0
-                },
-                {
-                    lableDesc: '是',
-                    uuid: 1
-                }
-            ],
-            hidden: [
-                {
-                    lableDesc: '隐藏',
-                    uuid: 0
-                },
-                {
-                    lableDesc: '显示',
-                    uuid: 1
-                }
-            ],
-            state: [
-                {
-                    lableDesc: '停用',
-                    uuid: 0
-                },
-                {
-                    lableDesc: '正常',
-                    uuid: 1
-                }
-            ],
-            noCache: [
-                {
-                    lableDesc: '缓存',
-                    uuid: 0
-                },
-                {
-                    lableDesc: '不缓存',
-                    uuid: 1
-                }
-            ],
-            breadcrumb: [
-                {
-                    lableDesc: '隐藏',
-                    uuid: 0
-                },
-                {
-                    lableDesc: '展示',
-                    uuid: 1
-                }
-            ],
-            component: [
-                {
-                    lableDesc: 'Layout',
-                    uuid: 'Layout'
-                },
-                {
-                    lableDesc: 'Blank',
-                    uuid: 'Blank'
-                }
-            ]
         };
     },
     computed: {
-        menuTypeName () {
-            let name = '';
-            const menuType = this.dialog.form.menuType;
-            if (menuType) {
-                name = this.menuType.find(elem => elem.uuid == menuType)?.lableDesc || '';
-            }
-            return name;
-        },
-        menuType () {
-            const dict = [
-                {
-                    lableDesc: '目录',
-                    uuid: 1,
-                    disabled: false
-                },
-                {
-                    lableDesc: '菜单',
-                    uuid: 2,
-                    disabled: false
-                },
-                {
-                    lableDesc: '按钮',
-                    uuid: 3,
-                    disabled: false
-                }
-            ];
-            if (this.optType == 'edit') {
-                if (this.dialog.form.menuType == '3') {
-                    dict[0].disabled = true;
-                    dict[1].disabled = true;
-                } else {
-                    dict[2].disabled = true;
-                }
-            }
-            return dict;
-        },
-        disabledParentMenu () {
-            let bool = false;
-            if (this.optType == 'edit' && this.dialog.form.menuType == '3' || this.optType == 'add_sub') {
-                bool = true;
-            }
-            return bool;
-        }
+        
     },
     async created () {
         this.initData();
@@ -210,10 +135,10 @@ export default {
         initData () {
             this.loading = true;
             const params = this._parseFilter()
-            api.queryMenuList({
+            api.queryHallCityList({
                 pageSize: 10,
                 pageNum: 1,
-                ...params,
+                ...params
             }).then((res) => {
                 const { data = [] } = res;
                 if (data && data.length) {
@@ -240,7 +165,7 @@ export default {
             } else {
                 this.optType = 'add';
             }
-            this.dialog.title = '添加菜单';
+            this.dialog.title = '添加城市资源库';
             this.dialog.show = true;
             this.$nextTick(() => {
                 this.dialog.form = form;
@@ -248,10 +173,13 @@ export default {
         },
         async handleEdit (row, index) {
             this.optType = 'edit';
-            this.dialog.title = '编辑菜单';
+            this.dialog.title = '编辑城市资源库';
             this.dialog.show = true;
             this.$nextTick(() => {
                 const data = JSON.parse(JSON.stringify(row));
+                if (data.cityCoverImage) {
+                    data.cityCoverImage = [{ url: data.cityCoverImage }]
+                }
                 this.dialog.form = data;
             });
         },
@@ -259,7 +187,7 @@ export default {
             this.$syncConfirm({
                 message: this.$tipsText.del,
                 confirmFn: async () => {
-                    return api.deleteMenuList(row.uuid);
+                    return api.deleteHallCityList(row.uuid);
                 },
                 confirmSuccessCallback: this.initData
             });
@@ -269,24 +197,29 @@ export default {
             this.dialog.btnLoading = false;
         },
         handleConfirm () {
-            const form = JSON.parse(JSON.stringify(this.dialog.form));
-            if (form.uuid) {
-                api.putMenuList(form).then(res => {
-                    if (res.code === '0000') {
-                        this.$message.success('修改成功')
-                        this.initData()
+            this.$refs[this.dialog.ref].validate(valid => {
+                if (valid) {
+                    const form = JSON.parse(JSON.stringify(this.dialog.form));
+                    form.cityCoverImage = form.cityCoverImage && form.cityCoverImage[0] ? form.cityCoverImage[0].url : ''
+                    if (form.uuid) {
+                        api.putHallCityList(form).then(res => {
+                            if (res.code === '0000') {
+                                this.$message.success('修改成功')
+                                this.initData()
+                            }
+                            this.handleCloseForm();
+                        })
+                    } else {
+                        api.addHallCityInfo(form).then(res => {
+                            if (res.code === '0000') {
+                                this.$message.success('新增成功')
+                                this.initData()
+                            }
+                            this.handleCloseForm();
+                        })
                     }
-                    this.handleCloseForm();
-                })
-            } else {
-                api.addMenuInfo(form).then(res => {
-                    if (res.code === '0000') {
-                        this.$message.success('新增成功')
-                        this.initData()
-                    }
-                    this.handleCloseForm();
-                })
-            }
+                }
+            })
         },
         /**
          * 清空验证
@@ -299,7 +232,7 @@ export default {
             }
         },
         /**
-         * 菜单类型变化
+         * 城市资源库类型变化
          */
         handleMenuTypeChange () {
             this.dialog.form.component = '';

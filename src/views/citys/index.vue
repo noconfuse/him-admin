@@ -37,24 +37,32 @@
         <Dialog :dialog="dialog" @confirm="handleConfirm">
             <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="120px">
                 <el-form-item label="城市名称" prop="cityName">
-                    <el-input v-model="dialog.form.cityName" placeholder="请输入城市名称" maxlength="100" />
+                    <el-input v-model="dialog.form.cityName" placeholder="请输入城市名称"  />
                 </el-form-item>
                 <el-form-item label="城市名称英文" prop="cityNameEn">
-                    <el-input v-model="dialog.form.cityNameEn" placeholder="请输入城市名称英文" maxlength="100" />
+                    <el-input v-model="dialog.form.cityNameEn" placeholder="请输入城市名称英文"  />
                 </el-form-item>
                 <el-form-item label="城市简介" prop="cityIntroduce">
-                    <el-input v-model="dialog.form.cityIntroduce" placeholder="请输入城市简介" maxlength="100" />
+                    <el-input v-model="dialog.form.cityIntroduce" placeholder="请输入城市简介"  />
                 </el-form-item>
                 <el-form-item label="城市简介英文" prop="cityIntroduceEn">
-                    <el-input v-model="dialog.form.cityIntroduceEn" placeholder="请输入城市简介英文" maxlength="100" />
+                    <el-input v-model="dialog.form.cityIntroduceEn" placeholder="请输入城市简介英文"  />
                 </el-form-item>
                 <el-form-item label="城市code" prop="cityCode">
-                    <el-input v-model="dialog.form.cityCode" placeholder="请输入城市code" maxlength="100" />
+                    <el-input v-model="dialog.form.cityCode" placeholder="请输入城市code"  />
+                </el-form-item>
+                <el-form-item label="账号" prop="username">
+                    <div style="display: flex;">
+                        <el-input v-model="dialog.form.username" placeholder="请输入账号"  /><el-button type="primary" style="margin-left: 10px" @click="randomAccount">随机账号</el-button>
+                    </div>
+                </el-form-item>
+                <el-form-item label="密码" prop="password">
+                    <el-input v-model="dialog.form.password" placeholder="请输入密码"  />
                 </el-form-item>
                 <el-form-item label="城市封面图" prop="cityCoverImage">
-                    <UploadFile ref="cityCoverImage" :multiple="false" :limit="1" :file-list.sync="dialog.form.cityCoverImage" accept=".mp3">
+                    <UploadFile ref="cityCoverImage" :multiple="false" :limit="1" :file-list.sync="dialog.form.cityCoverImage" accept=".jpg,.png,.jpeg">
                         <ul>
-                            <li>格式：mp3</li>
+                            <li>格式：png/jpg</li>
                         </ul>
                     </UploadFile>
                 </el-form-item>
@@ -121,6 +129,20 @@ export default {
                             trigger: 'blur'
                         }
                     ],
+                    username: [
+                        {
+                            required: true,
+                            message: '请输入账号',
+                            trigger: 'change'
+                        }
+                    ],
+                    password: [
+                        {
+                            required: true,
+                            message: '请输入密码',
+                            trigger: 'change'
+                        }
+                    ],
                 }
             },
         };
@@ -156,6 +178,15 @@ export default {
          */
         handleSearch () {
             this.initData();
+        },
+        randomAccount() {
+            api.addExhibitHallCityUser().then(res => {
+                res.data = res.data || {}
+                // this.dialog.form.username = res.data.username
+                // this.dialog.form.password = res.data.password
+                this.$set(this.dialog.form, 'username', res.data.username)
+                this.$set(this.dialog.form, 'password', res.data.password)
+            })
         },
         async handleAdd (row) {
             const form = JSON.parse(JSON.stringify(baseForm));

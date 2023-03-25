@@ -35,16 +35,16 @@
         <Dialog :dialog="dialog" @confirm="handleConfirm">
             <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="100px">
                 <el-form-item label="介绍" prop="imageIntroduce">
-                    <el-input v-model="dialog.form.imageIntroduce" placeholder="请输入介绍" maxlength="100" />
+                    <el-input v-model="dialog.form.imageIntroduce" placeholder="请输入介绍"  />
                 </el-form-item>
                 <el-form-item label="英文介绍" prop="imageIntroduceEn">
-                    <el-input v-model="dialog.form.imageIntroduceEn" placeholder="请输入英文介绍" maxlength="100" />
+                    <el-input v-model="dialog.form.imageIntroduceEn" placeholder="请输入英文介绍"  />
                 </el-form-item>
                 <el-form-item label="图片名称" prop="imageName">
-                    <el-input v-model="dialog.form.imageName" placeholder="请输入图片名称" maxlength="100" />
+                    <el-input v-model="dialog.form.imageName" placeholder="请输入图片名称"  />
                 </el-form-item>
                 <el-form-item label="图片code" prop="imageCode">
-                    <el-input v-model="dialog.form.imageCode" placeholder="请输入图片code" maxlength="100" />
+                    <el-input v-model="dialog.form.imageCode" placeholder="请输入图片code"  />
                 </el-form-item>
                 <el-form-item label="背景图片" prop="linkUrl">
                     <UploadFile ref="imageUrl" :multiple="false" :limit="1" :file-list.sync="dialog.form.imageUrl" accept=".jpg,.png,.jpeg">

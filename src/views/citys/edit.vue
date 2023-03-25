@@ -6,19 +6,48 @@
                 <div class="content">
                     <el-row :gutter="20" type="flex">
                         <el-col :xs="24" :sm="12">
-                            <el-form-item label="中文名称" prop="menuName">
-                                <el-input v-model="form.menuName" placeholder="请输入中文名称"  />
+                            <el-form-item label="城市名称" prop="cityName">
+                                <el-input v-model="form.cityName" placeholder="请输入城市名称"  />
                             </el-form-item>
                         </el-col>
                         <el-col :xs="24" :sm="12">
-                            <el-form-item label="英文名称" prop="menuNameEn">
-                                <el-input v-model="form.menuNameEn" placeholder="请输入英文名称"  />
+                            <el-form-item label="城市名称英文" prop="cityNameEn">
+                                <el-input v-model="form.cityNameEn" placeholder="请输入城市名称英文"  />
                             </el-form-item>
                         </el-col>
                         <el-col :xs="24" :sm="12">
-                            <el-form-item label="跳转地址" prop="linkUrl">
-                                <el-input v-model="form.linkUrl" placeholder="请输入跳转地址"  />
+                            <el-form-item label="城市简介" prop="cityIntroduce">
+                                <el-input v-model="form.cityIntroduce" placeholder="请输入城市简介"  />
                             </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="城市简介英文" prop="cityIntroduceEn">
+                                <el-input v-model="form.cityIntroduceEn" placeholder="请输入城市简介英文"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="城市code" prop="cityCode">
+                                <el-input v-model="form.cityCode" placeholder="请输入城市code"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="作者名称" prop="authorName">
+                                <el-input v-model="form.authorName" placeholder="请输入作者名称"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="作者手机" prop="authorPhone">
+                                <el-input v-model="form.authorPhone" placeholder="请输入作者手机"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="作者邮箱" prop="authorEmail">
+                                <el-input v-model="form.authorEmail" placeholder="请输入作者邮箱"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
                         </el-col>
                     </el-row>
                 </div>
