@@ -165,5 +165,36 @@ export default {
             data
         });
     },
+    //新增媒体库
+    addMediaLibraryInfo: (data) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/media/library/add`,
+            method: 'post',
+            data
+        });
+    },
+    //查询媒体库列表
+    queryMediaLibraryList: (data) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/media/library/list`,
+            method: 'post',
+            data
+        });
+    },
+    //修改媒体库
+    putMediaLibraryList: (data) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/media/library/update/${data.uuid}`,
+            method: 'put',
+            data
+        });
+    },
+    //删除媒体库
+    deleteMediaLibraryList: (uuid) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/media/library/delete/${uuid}`,
+            method: 'delete',
+        });
+    },
 }
 

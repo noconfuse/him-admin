@@ -92,11 +92,24 @@ export const constantRoutes = [
         hidden: true
     },
     {
+        path: '/media',
+        component: map.get('Layout'),
+        redirect: '/media/index',
+        children: [
+            {
+                path: 'index',
+                name: 'index',
+                component: () => import('@/views/media/index')
+            },
+        ],
+        hidden: true
+    },
+    {
         path: '/',
         component: map.get('Layout'),
         redirect: () => {
             const accessedRoutes = store.getters.accessedRoutes;
-            const path = accessedRoutes.length ? accessedRoutes[0].path : '/dashboard';
+            const path = accessedRoutes.length ? accessedRoutes[0].path : '/home';
             return path;
         }
     }

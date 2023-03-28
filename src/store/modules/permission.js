@@ -162,6 +162,22 @@ const actions = {
                         "path": "/citys/index",
                         "uuid": "102",
                     },
+                    {
+                        "alwaysShow": false,
+                        "component": "string",
+                        "hidden": false,
+                        "meta": {
+                            "activeMenu": "string",
+                            "breadcrumb": true,
+                            "icon": "string",
+                            "noCache": false,
+                            "title": "媒体库"
+                        },
+                        "name": "media",
+                        "parentUuid": "123",
+                        "path": "/media/index",
+                        "uuid": "102",
+                    },
                 ]
                 const { data } = response;
                 /**

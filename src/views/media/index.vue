@@ -5,70 +5,49 @@
             <div class="list-page-operation">
                 <div class="l" />
                 <div class="r">
-                    <el-button type="success" @click="handleAdd()">添加城市资源库</el-button>
+                    <!-- <el-button type="success" @click="handleAdd()">添加图片</el-button> -->
                 </div>
             </div>
             <el-table ref="multipleTable" v-loading="loading" :data="tableData" border style="width: 100%" row-key="uuid" :default-expand-all="false">
-                <el-table-column prop="linkUrl" label="城市封面图" align="left" width="120">
+                <el-table-column prop="mediaFileType" label="媒体类型" align="left" min-width="200" />
+                <el-table-column prop="mediaFileUrl" label="媒体文件" align="left" width="120">
                     <template slot-scope="{row}">
-                        <el-image 
+                        <el-image
+                            v-if="row.mediaFileType === '图片'"
                             style="width: 100px; height: 100px"
-                            :src="row.cityCoverImage" 
-                            :preview-src-list="[row.cityCoverImage]">
+                            :src="row.mediaFileUrl" 
+                            :preview-src-list="[row.mediaFileUrl]">
                         </el-image>
+                        <video v-if="row.mediaFileType === '视频'" :src="row.mediaFileUrl"></video>
+                        <audio v-if="row.mediaFileType === '音频'" :src="row.mediaFileUrl"></audio>
                     </template>
                 </el-table-column>
-                <el-table-column prop="cityName" label="城市名称" align="left" min-width="200" />
-                <el-table-column prop="cityNameEn" label="城市名称英文" align="left" min-width="200" />
-                <el-table-column prop="cityIntroduce" label="城市简介" align="left" min-width="200" />
-                <el-table-column prop="cityIntroduceEn" label="城市简介英文" align="left" min-width="200" />
-                <el-table-column label="操作" align="center" width="140" fixed="right">
+                <el-table-column prop="cityName" label="所属城市" align="left" min-width="200" />
+                <!-- <el-table-column label="操作" align="center" width="140" fixed="right">
                     <template slot-scope="{row,$index}">
                         <el-link type="primary" :underline="false" @click="handleEdit(row,$index)">
-                            编辑
-                        </el-link>
-                        <el-link type="danger" style="margin-left: 10px" :underline="false" @click="handleDel(row,$index)">
-                            删除
+                            查看
                         </el-link>
                     </template>
-                </el-table-column>
+                </el-table-column> -->
             </el-table>
         </div>
         <Dialog :dialog="dialog" @confirm="handleConfirm">
-            <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="120px">
-                <el-form-item label="展馆" prop="exhibitionHallUuid">
-                    <el-select v-model="dialog.form.exhibitionHallUuid" placeholder="请选择展馆">
-                        <el-option v-for="(item, index) in hallList" :key="index" :value="item.uuid" :label="item.exhibitionHallName"></el-option>
-                    </el-select>
+            <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="100px">
+                <el-form-item label="介绍" prop="imageIntroduce">
+                    <el-input v-model="dialog.form.imageIntroduce" placeholder="请输入介绍"  />
                 </el-form-item>
-                <el-form-item label="城市名称" prop="cityName">
-                    <el-input v-model="dialog.form.cityName" placeholder="请输入城市名称"  />
+                <el-form-item label="英文介绍" prop="imageIntroduceEn">
+                    <el-input v-model="dialog.form.imageIntroduceEn" placeholder="请输入英文介绍"  />
                 </el-form-item>
-                <el-form-item label="城市名称英文" prop="cityNameEn">
-                    <el-input v-model="dialog.form.cityNameEn" placeholder="请输入城市名称英文"  />
+                <el-form-item label="图片名称" prop="imageName">
+                    <el-input v-model="dialog.form.imageName" placeholder="请输入图片名称"  />
                 </el-form-item>
-                <el-form-item label="城市简介" prop="cityIntroduce">
-                    <el-input v-model="dialog.form.cityIntroduce" placeholder="请输入城市简介"  />
+                <el-form-item label="图片code" prop="imageCode">
+                    <el-input v-model="dialog.form.imageCode" placeholder="请输入图片code"  />
                 </el-form-item>
-                <el-form-item label="城市简介英文" prop="cityIntroduceEn">
-                    <el-input v-model="dialog.form.cityIntroduceEn" placeholder="请输入城市简介英文"  />
-                </el-form-item>
-                <el-form-item label="城市code" prop="cityCode">
-                    <el-input v-model="dialog.form.cityCode" placeholder="请输入城市code"  />
-                </el-form-item>
-                <el-form-item label="账号" prop="username">
-                    <div style="display: flex;">
-                        <el-input v-model="dialog.form.username" placeholder="请输入账号"  /><el-button type="primary" style="margin-left: 10px" @click="randomAccount">随机账号</el-button>
-                    </div>
-                </el-form-item>
-                <el-form-item label="密码" prop="password">
-                    <el-input v-model="dialog.form.password" placeholder="请输入密码"  />
-                </el-form-item>
-                <el-form-item label="排序值" prop="sortNum">
-                    <el-input-number v-model="dialog.form.sortNum" :controls="false" />
-                </el-form-item>
-                <el-form-item label="城市封面图" prop="cityCoverImage">
-                    <UploadFile ref="cityCoverImage" :multiple="false" :limit="1" :file-list.sync="dialog.form.cityCoverImage" accept=".jpg,.png,.jpeg">
+                <el-form-item label="背景图片" prop="linkUrl">
+                    <UploadFile ref="imageUrl" :multiple="false" :limit="1" :file-list.sync="dialog.form.imageUrl" accept=".jpg,.png,.jpeg">
                         <ul>
                             <li>格式：png/jpg</li>
                         </ul>
@@ -86,7 +65,6 @@ import Dialog from '@/components/Dialog';
 import UploadFile from '@/components/UploadPic';
 
 const baseForm = {
-    sortNum: 1
 };
 export default {
     name: 'Menu',
@@ -99,18 +77,18 @@ export default {
         return {
             loading: true,
             filter: {
-                cityCode: {
+                mediaFileType: {
                     type: 'input',
-                    label: '城市code',
+                    label: '文件类型',
                     value: '',
-                    placeholder: '请选择城市code',
+                    placeholder: '请输入文件类型',
                     filterable: true,
                 },
                 cityName: {
                     type: 'input',
-                    label: '城市名称',
+                    label: '所属城市',
                     value: '',
-                    placeholder: '请选择城市名称',
+                    placeholder: '请输入所属城市',
                     filterable: true,
                 },
             },
@@ -121,48 +99,25 @@ export default {
                 title: '',
                 show: false,
                 ref: 'form',
-                form: {
-                },
+                form: {},
                 btnLoading: false,
                 rules: {
-                    exhibitionHallUuid: [
+                    imageIntroduce: [
                         {
                             required: true,
-                            message: '请选择展馆',
+                            message: '请输入介绍',
                             trigger: 'blur'
                         }
                     ],
-                    cityName: [
+                    imageIntroduceEn: [
                         {
                             required: true,
-                            message: '请输入城市名称',
+                            message: '请输入英文介绍',
                             trigger: 'blur'
-                        }
-                    ],
-                    cityNameEn: [
-                        {
-                            required: true,
-                            message: '请输入城市名称英文',
-                            trigger: 'blur'
-                        }
-                    ],
-                    username: [
-                        {
-                            required: true,
-                            message: '请输入账号',
-                            trigger: 'change'
-                        }
-                    ],
-                    password: [
-                        {
-                            required: true,
-                            message: '请输入密码',
-                            trigger: 'change'
                         }
                     ],
                 }
             },
-            hallList: []
         };
     },
     computed: {
@@ -170,22 +125,12 @@ export default {
     },
     async created () {
         this.initData();
-        this.queryHallList()
     },
     methods: {
-        queryHallList() {
-            const params = {
-                pageNum: 1,
-                pageSize: 99
-            }
-            api.queryHallList(params).then(res => {
-                this.hallList = res.data
-            })
-        },
         initData () {
             this.loading = true;
             const params = this._parseFilter()
-            api.queryHallCityList({
+            api.queryMediaLibraryList({
                 pageSize: 10,
                 pageNum: 1,
                 ...params
@@ -207,15 +152,6 @@ export default {
         handleSearch () {
             this.initData();
         },
-        randomAccount() {
-            api.addExhibitHallCityUser().then(res => {
-                res.data = res.data || {}
-                // this.dialog.form.username = res.data.username
-                // this.dialog.form.password = res.data.password
-                this.$set(this.dialog.form, 'username', res.data.username)
-                this.$set(this.dialog.form, 'password', res.data.password)
-            })
-        },
         async handleAdd (row) {
             const form = JSON.parse(JSON.stringify(baseForm));
             if (row && row.menuType) {
@@ -224,7 +160,7 @@ export default {
             } else {
                 this.optType = 'add';
             }
-            this.dialog.title = '添加城市资源库';
+            this.dialog.title = '添加图片';
             this.dialog.show = true;
             this.$nextTick(() => {
                 this.dialog.form = form;
@@ -232,13 +168,11 @@ export default {
         },
         async handleEdit (row, index) {
             this.optType = 'edit';
-            this.dialog.title = '编辑城市资源库';
+            this.dialog.title = '编辑图片';
             this.dialog.show = true;
             this.$nextTick(() => {
                 const data = JSON.parse(JSON.stringify(row));
-                if (data.cityCoverImage) {
-                    data.cityCoverImage = [{ url: data.cityCoverImage }]
-                }
+                data.imageUrl = [{ url: data.imageUrl }]
                 this.dialog.form = data;
             });
         },
@@ -246,7 +180,7 @@ export default {
             this.$syncConfirm({
                 message: this.$tipsText.del,
                 confirmFn: async () => {
-                    return api.deleteHallCityList(row.uuid);
+                    return api.deleteMediaLibraryList(row.uuid);
                 },
                 confirmSuccessCallback: this.initData
             });
@@ -259,9 +193,9 @@ export default {
             this.$refs[this.dialog.ref].validate(valid => {
                 if (valid) {
                     const form = JSON.parse(JSON.stringify(this.dialog.form));
-                    form.cityCoverImage = form.cityCoverImage && form.cityCoverImage[0] ? form.cityCoverImage[0].url : ''
+                    form.imageUrl = form.imageUrl && form.imageUrl[0] ? form.imageUrl[0].url : ''
                     if (form.uuid) {
-                        api.putHallCityList(form).then(res => {
+                        api.putMediaLibraryList(form).then(res => {
                             if (res.code === '0000') {
                                 this.$message.success('修改成功')
                                 this.initData()
@@ -269,7 +203,7 @@ export default {
                             this.handleCloseForm();
                         })
                     } else {
-                        api.addHallCityInfo(form).then(res => {
+                        api.addMediaLibraryInfo(form).then(res => {
                             if (res.code === '0000') {
                                 this.$message.success('新增成功')
                                 this.initData()
@@ -291,7 +225,7 @@ export default {
             }
         },
         /**
-         * 城市资源库类型变化
+         * 图片类型变化
          */
         handleMenuTypeChange () {
             this.dialog.form.component = '';
