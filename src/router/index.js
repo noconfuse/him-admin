@@ -87,8 +87,13 @@ export const constantRoutes = [
     {
         path: '/citysEdit',
         name: 'citysEdit',
-        component: map.get('Layout'),
         component: () => import('@/views/citys/edit'),
+        hidden: true
+    },
+    {
+        path: '/citys3d',
+        name: 'citys3d',
+        component: () => import('@/views/citys3d'),
         hidden: true
     },
     {
@@ -104,15 +109,15 @@ export const constantRoutes = [
         ],
         hidden: true
     },
-    {
-        path: '/',
-        component: map.get('Layout'),
-        redirect: () => {
-            const accessedRoutes = store.getters.accessedRoutes;
-            const path = accessedRoutes.length ? accessedRoutes[0].path : '/home';
-            return path;
-        }
-    }
+    // {
+    //     path: '/',
+    //     component: map.get('Layout'),
+    //     redirect: () => {
+    //         const accessedRoutes = store.getters.accessedRoutes;
+    //         const path = accessedRoutes.length && accessedRoutes[0] && accessedRoutes[0].path ? accessedRoutes[0].path : '/home';
+    //         return path;
+    //     }
+    // }
 ];
 
 export const asyncRoutes = [

@@ -43,6 +43,10 @@ router.beforeEach(async (to, from, next) => {
                     await store.dispatch('user/getInfo');
                     await store.dispatch('permission/generateRoutes');
                     // await store.dispatch('permission/generatePermissionBtn');
+                    if (to.path === '/') {
+                        next({ ...store.getters.accessedRoutes[0], replace: true });
+                        return
+                    }
                     next({ ...to, replace: true });
                 } catch (error) {
                     // remove token and go to login page to re-login

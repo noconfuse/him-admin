@@ -157,6 +157,13 @@ export default {
             method: 'delete',
         });
     },
+    //根据用户查询展馆城市配置
+    queryDetailByUser: (uuid) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/exhibition/hall/city/queryDetailByUser`,
+            method: 'get',
+        });
+    },
     // 随机生成账号
     addExhibitHallCityUser: (data = {}) => {
         return request({
