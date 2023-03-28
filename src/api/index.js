@@ -157,6 +157,14 @@ export default {
             method: 'delete',
         });
     },
+    //审核展馆城市信息
+    checkInfoExhibitionHallCity: (data) => {
+        return request({
+            url: `${API_PREFIX_BUSSINESS}/info/exhibition/hall/city/checkInfoExhibitionHallCity/${data.uuid}`,
+            method: 'post',
+            data
+        });
+    },
     //根据用户查询展馆城市配置
     queryDetailByUser: (uuid) => {
         return request({

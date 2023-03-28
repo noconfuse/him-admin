@@ -24,7 +24,10 @@
                 <el-table-column prop="cityIntroduceEn" label="城市简介英文" align="left" min-width="200" />
                 <el-table-column label="操作" align="center" width="140" fixed="right">
                     <template slot-scope="{row,$index}">
-                        <el-link type="primary" :underline="false" @click="handleEdit(row,$index)">
+                        <el-link type="primary" :underline="false" @click="handleCheck(row,$index)">
+                            审核
+                        </el-link>
+                        <el-link type="primary" style="margin-left: 10px" :underline="false" @click="handleEdit(row,$index)">
                             编辑
                         </el-link>
                         <el-link type="danger" style="margin-left: 10px" :underline="false" @click="handleDel(row,$index)">
@@ -34,7 +37,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <Dialog :dialog="dialog" @confirm="handleConfirm">
+        <Dialog :dialog="dialog" @confirm="handleConfirm" :showCheckBtn="showCheckBtn" :showConfirmBtn="showConfirmBtn">
             <el-form :ref="dialog.ref" :model="dialog.form" :rules="dialog.rules" label-width="120px">
                 <el-form-item label="展馆" prop="exhibitionHallUuid">
                     <el-select v-model="dialog.form.exhibitionHallUuid" placeholder="请选择展馆">
@@ -56,9 +59,21 @@
                 <el-form-item label="城市code" prop="cityCode">
                     <el-input v-model="dialog.form.cityCode" placeholder="请输入城市code"  />
                 </el-form-item>
+                <el-form-item label="作者名称" prop="authorName">
+                    <el-input disabled v-model="dialog.form.authorName" placeholder="请输入作者名称"  />
+                </el-form-item>
+                <el-form-item label="作者手机" prop="authorPhone">
+                    <el-input disabled v-model="dialog.form.authorPhone" placeholder="请输入作者手机"  />
+                </el-form-item>
+                <el-form-item label="作者邮箱" prop="authorEmail">
+                    <el-input disabled v-model="dialog.form.authorEmail" placeholder="请输入作者邮箱"  />
+                </el-form-item>
+                <el-form-item label="所属机构" prop="mechanismName">
+                    <el-input disabled v-model="dialog.form.mechanismName" placeholder="请输入所属机构"  />
+                </el-form-item>
                 <el-form-item label="账号" prop="username">
                     <div style="display: flex;">
-                        <el-input v-model="dialog.form.username" placeholder="请输入账号"  /><el-button type="primary" style="margin-left: 10px" @click="randomAccount">随机账号</el-button>
+                        <el-input v-model="dialog.form.username" placeholder="请输入账号"  /><el-button type="primary" style="margin-left: 10px" @click="randomAccount" v-if="optType != 'check'">随机账号</el-button>
                     </div>
                 </el-form-item>
                 <el-form-item label="密码" prop="password">
@@ -67,6 +82,12 @@
                 <el-form-item label="排序值" prop="sortNum">
                     <el-input-number v-model="dialog.form.sortNum" :controls="false" />
                 </el-form-item>
+                <el-form-item label="是否有效" prop="sts">
+                    <el-radio-group v-model="dialog.form.sts">
+                        <el-radio :label="0">是</el-radio>
+                        <el-radio :label="1">否</el-radio>
+                    </el-radio-group>
+                </el-form-item>
                 <el-form-item label="城市封面图" prop="cityCoverImage">
                     <UploadFile ref="cityCoverImage" :multiple="false" :limit="1" :file-list.sync="dialog.form.cityCoverImage" accept=".jpg,.png,.jpeg">
                         <ul>
@@ -74,6 +95,16 @@
                         </ul>
                     </UploadFile>
                 </el-form-item>
+                <template v-if="optType == 'check'">
+                    <el-form-item label="审核状态" prop="checkState">
+                        <el-select v-model="dialog.form.checkState" placeholder="请选择审核状态">
+                            <el-option v-for="(item, index) in checkStateList" :key="index" :value="item.value" :label="item.label"></el-option>
+                        </el-select>
+                    </el-form-item>
+                    <el-form-item label="驳回原因" v-if="dialog.form.checkState == 3" prop="rejectDesc">
+                        <el-input v-model="dialog.form.rejectDesc" placeholder="请输入驳回原因"  />
+                    </el-form-item>
+                </template>
             </el-form>
         </Dialog>
     </div>
@@ -86,7 +117,8 @@ import Dialog from '@/components/Dialog';
 import UploadFile from '@/components/UploadPic';
 
 const baseForm = {
-    sortNum: 1
+    sortNum: 1,
+    sts: 0
 };
 export default {
     name: 'Menu',
@@ -97,6 +129,8 @@ export default {
     },
     data () {
         return {
+            showConfirmBtn: false,
+            showCheckBtn: false,
             loading: true,
             filter: {
                 cityCode: {
@@ -218,21 +252,38 @@ export default {
         },
         async handleAdd (row) {
             const form = JSON.parse(JSON.stringify(baseForm));
-            if (row && row.menuType) {
+            if (row && row.uuid) {
                 this.optType = 'add_sub';
-                form.parentUuid = row.uuid;
             } else {
                 this.optType = 'add';
             }
             this.dialog.title = '添加城市资源库';
+            this.showConfirmBtn = true;
+            this.showCheckBtn = false;
             this.dialog.show = true;
             this.$nextTick(() => {
                 this.dialog.form = form;
             });
         },
+        async handleCheck (row, index) {
+            this.optType = 'check';
+            this.dialog.title = '审核城市资源库';
+            this.showConfirmBtn = false;
+            this.showCheckBtn = true;
+            this.dialog.show = true;
+            this.$nextTick(() => {
+                const data = JSON.parse(JSON.stringify(row));
+                if (data.cityCoverImage) {
+                    data.cityCoverImage = [{ url: data.cityCoverImage }]
+                }
+                this.dialog.form = data;
+            });
+        },
         async handleEdit (row, index) {
             this.optType = 'edit';
             this.dialog.title = '编辑城市资源库';
+            this.showConfirmBtn = true;
+            this.showCheckBtn = false;
             this.dialog.show = true;
             this.$nextTick(() => {
                 const data = JSON.parse(JSON.stringify(row));
@@ -260,6 +311,18 @@ export default {
                 if (valid) {
                     const form = JSON.parse(JSON.stringify(this.dialog.form));
                     form.cityCoverImage = form.cityCoverImage && form.cityCoverImage[0] ? form.cityCoverImage[0].url : ''
+                    if (form.uuid && this.optType == 'check') {
+                        api.checkInfoExhibitionHallCity(form).then(res => {
+                            if (res.code === '0000') {
+                                this.$message.success('审核成功')
+                                this.initData()
+                            }
+                            this.handleCloseForm();
+                        }).catch(err => {
+                            this.dialog.btnLoading = false
+                        })
+                        return
+                    }
                     if (form.uuid) {
                         api.putHallCityList(form).then(res => {
                             if (res.code === '0000') {
@@ -267,6 +330,8 @@ export default {
                                 this.initData()
                             }
                             this.handleCloseForm();
+                        }).catch(err => {
+                            this.dialog.btnLoading = false
                         })
                     } else {
                         api.addHallCityInfo(form).then(res => {
@@ -275,6 +340,8 @@ export default {
                                 this.initData()
                             }
                             this.handleCloseForm();
+                        }).catch(err => {
+                            this.dialog.btnLoading = false
                         })
                     }
                 }

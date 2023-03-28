@@ -77,14 +77,17 @@ export default {
     & .sidebar-logo-link {
         height: 100%;
         width: 100%;
+        padding-left: 20px;
+        display: flex !important;
+        align-items: center;
 
         & .sidebar-logo {
-            width: 60px;
+            display: block;
+            width: auto;
+            height: 30px;
             // width: 32px;
             // height: 32px;
             vertical-align: middle;
-            // margin-right: 12px;
-            margin-right: 8px;
         }
 
         & .sidebar-title {

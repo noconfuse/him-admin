@@ -52,6 +52,23 @@
                                 <el-input v-model="form.authorEmail" placeholder="请输入作者邮箱"  />
                             </el-form-item>
                         </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="所属机构" prop="mechanismName">
+                                <el-input v-model="form.mechanismName" placeholder="请输入所属机构"  />
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="审核状态" prop="checkState">
+                                <el-select disabled v-model="form.checkState" placeholder="请选择审核状态">
+                                    <el-option v-for="(item, index) in checkStateList" :key="index" :value="item.value" :label="item.label"></el-option>
+                                </el-select>
+                            </el-form-item>
+                        </el-col>
+                        <el-col :xs="24" :sm="12">
+                            <el-form-item label="驳回原因" v-if="form.checkState == 3" prop="rejectDesc">
+                                <el-input disabled v-model="form.rejectDesc" placeholder="请输入驳回原因"  />
+                            </el-form-item>
+                        </el-col>
                     </el-row>
                 </div>
             </div>

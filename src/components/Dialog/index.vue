@@ -12,6 +12,7 @@
         <div slot="footer" class="dialog-footer">
             <el-button @click="handleCancel">取 消</el-button>
             <el-button v-if="showConfirmBtn" type="primary" :loading="dialog.btnLoading" @click="handleConfirm">确 定</el-button>
+            <el-button v-if="showCheckBtn" type="primary" :loading="dialog.btnLoading" @click="handleConfirm">审 核</el-button>
         </div>
     </el-dialog>
 </template>
@@ -32,6 +33,10 @@ export default {
         showConfirmBtn: {
             type: Boolean,
             default: true
+        },
+        showCheckBtn: {
+            type: Boolean,
+            default: false
         }
     },
     data () {

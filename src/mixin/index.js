@@ -6,6 +6,34 @@ export default {
                 const res = arr.find(item => item.uuid == row[field]) || {};
                 return res.type || '';
             };
+        },
+        checkStateList() {
+            return [
+                {
+                    value: 0,
+                    label: '未提交'
+                },
+                {
+                    value: 1,
+                    label: '待审核'
+                },
+                {
+                    value: 2,
+                    label: '已审核'
+                },
+                {
+                    value: 3,
+                    label: '已驳回'
+                },
+                {
+                    value: 4,
+                    label: '已发布'
+                },
+                {
+                    value: 5,
+                    label: '已下架'
+                },
+            ]
         }
     },
     methods: {
